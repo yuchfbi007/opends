@@ -1,0 +1,23 @@
+version: "3"
+networks:
+  idsnet:
+      driver: bridge
+      ipam:
+        config:  
+            - subnet: 192.168.1.0/26
+          
+services:
+  idsdj:
+    build:
+        context: src/opendj
+    image: ${IDS_DOCKER_REG:-hub.ark.jd.com}/${IDS_DOCKER_REPO:-founder}/opendj:${IDS_DOCKER_TAG:-latest}
+    ports:
+        - "1389:1389"
+        - "1636:1636"
+        - "8444:4444"
+    container_name: ids_dj
+    volumes: 
+        - "${IDS_DATASPACE_DIR:-~/.ids}/opendj/instance1:/opt/opendj/instance"
+    networks:
+        idsnet:
+            ipv4_address: 192.168.1.33
